@@ -38,6 +38,16 @@ namespace Microsoft.AspNetCore.Components.Testing
             return element.TriggerEventAsync("onchange", new ChangeEventArgs { Value = newValue });
         }
 
+        public static void Change(this HtmlNode element, bool newValue)
+        {
+            _ = ChangeAsync(element, newValue);
+        }
+
+        public static Task ChangeAsync(this HtmlNode element, bool newValue)
+        {
+            return element.TriggerEventAsync("onchange", new ChangeEventArgs { Value = newValue });
+        }
+
         [SuppressMessage("Usage", "BL0006:Do not use RenderTree types", Justification = "<Pending>")]
         public static Task TriggerEventAsync(this HtmlNode element, string attributeName, EventArgs eventArgs)
         {
