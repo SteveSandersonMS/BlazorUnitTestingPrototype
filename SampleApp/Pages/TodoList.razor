@@ -1,0 +1,39 @@
+﻿@page "/todo"
+
+<h1>Todo</h1>
+
+<ul>
+    @foreach (var item in items)
+    {
+        <li>
+            <button class="delete" @onclick="() => DeleteItem(item)">Delete</button>
+            <span>@item.Text</span>
+        </li>
+    }
+</ul>
+
+<form @onsubmit="AddItem">
+    <input placeholder="Type something..." @bind="newItemText" />
+</form>
+
+@code {
+    private string newItemText;
+    private List<TodoItem> items = new List<TodoItem>();
+
+    void AddItem()
+    {
+        items.Add(new TodoItem { Text = newItemText });
+        newItemText = null;
+    }
+
+    void DeleteItem(TodoItem item)
+    {
+        items.Remove(item);
+    }
+
+    class TodoItem
+    {
+        public string Text { get; set; }
+        public bool IsDone { get; set; }
+    }
+}
