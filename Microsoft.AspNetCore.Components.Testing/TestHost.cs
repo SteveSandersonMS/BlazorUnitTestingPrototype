@@ -23,6 +23,8 @@ namespace Microsoft.AspNetCore.Components.Testing
             });
         }
 
+        public IServiceProvider Services { get { return _serviceCollection.BuildServiceProvider(); } }
+
         public void AddService<T>(T implementation)
             => AddService<T, T>(implementation);
 
