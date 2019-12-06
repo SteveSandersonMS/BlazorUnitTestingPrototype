@@ -1,10 +1,7 @@
-﻿using Microsoft.AspNetCore.Components.RenderTree;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using System;
-using System.Diagnostics.CodeAnalysis;
-using System.Threading.Tasks;
 
 namespace Microsoft.AspNetCore.Components.Testing
 {
@@ -12,18 +9,23 @@ namespace Microsoft.AspNetCore.Components.Testing
     {
         private readonly ServiceCollection _serviceCollection = new ServiceCollection();
         private readonly Lazy<TestRenderer> _renderer;
+        private readonly Lazy<IServiceProvider> _serviceProvider;
 
         public TestHost()
         {
+            _serviceProvider = new Lazy<IServiceProvider>(() =>
+            {
+                return _serviceCollection.BuildServiceProvider();
+            });
+
             _renderer = new Lazy<TestRenderer>(() =>
             {
-                var serviceProvider = _serviceCollection.BuildServiceProvider();
-                var loggerFactory = serviceProvider.GetService<ILoggerFactory>() ?? new NullLoggerFactory();
-                return new TestRenderer(serviceProvider, loggerFactory);
+                var loggerFactory = Services.GetService<ILoggerFactory>() ?? new NullLoggerFactory();
+                return new TestRenderer(Services, loggerFactory);
             });
         }
 
-        public IServiceProvider Services { get { return _serviceCollection.BuildServiceProvider(); } }
+        public IServiceProvider Services => _serviceProvider.Value;
 
         public void AddService<T>(T implementation)
             => AddService<T, T>(implementation);
