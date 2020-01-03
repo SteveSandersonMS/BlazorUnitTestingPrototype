@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using System;
+using System.Collections.Generic;
 
 namespace Microsoft.AspNetCore.Components.Testing
 {
@@ -58,12 +59,19 @@ namespace Microsoft.AspNetCore.Components.Testing
             result.SetParametersAndRender(ParameterView.Empty);
             return result;
         }
+
         public RenderedComponent<TComponent> AddComponent<TComponent>(ParameterView parameters) where TComponent : IComponent
         {
             var result = new RenderedComponent<TComponent>(Renderer);
             result.SetParametersAndRender(parameters);
             return result;
         }
+
+        public RenderedComponent<TComponent> AddComponent<TComponent>(IDictionary<string, object> parameters) where TComponent : IComponent
+        {
+            return AddComponent<TComponent>(ParameterView.FromDictionary(parameters));
+        }
+
         private TestRenderer Renderer => _renderer.Value;
     }
 }
