@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Microsoft.AspNetCore.Components.Testing
 {
@@ -16,6 +17,7 @@ namespace Microsoft.AspNetCore.Components.Testing
         {
             
         }
+
         public TestHost(IServiceCollection services)
         {
             _serviceCollection = services;
@@ -48,7 +50,7 @@ namespace Microsoft.AspNetCore.Components.Testing
 
         public void WaitForNextRender(Action trigger)
         {
-            var task = Renderer.NextRender;
+            var task = NextRender();
             trigger();
             task.Wait(millisecondsTimeout: 1000);
 
@@ -75,6 +77,11 @@ namespace Microsoft.AspNetCore.Components.Testing
         public RenderedComponent<TComponent> AddComponent<TComponent>(IDictionary<string, object> parameters) where TComponent : IComponent
         {
             return AddComponent<TComponent>(ParameterView.FromDictionary(parameters));
+        }
+
+        public Task NextRender()
+        {
+            return Renderer.NextRender;
         }
 
         private TestRenderer Renderer => _renderer.Value;
