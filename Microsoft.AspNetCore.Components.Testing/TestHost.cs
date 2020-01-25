@@ -8,12 +8,17 @@ namespace Microsoft.AspNetCore.Components.Testing
 {
     public class TestHost
     {
-        private readonly ServiceCollection _serviceCollection = new ServiceCollection();
+        private readonly IServiceCollection _serviceCollection;
         private readonly Lazy<TestRenderer> _renderer;
         private readonly Lazy<IServiceProvider> _serviceProvider;
 
-        public TestHost()
+        public TestHost():this(new ServiceCollection())
         {
+            
+        }
+        public TestHost(IServiceCollection services)
+        {
+            _serviceCollection = services;
             _serviceProvider = new Lazy<IServiceProvider>(() =>
             {
                 return _serviceCollection.BuildServiceProvider();
